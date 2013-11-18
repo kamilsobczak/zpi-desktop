@@ -35,6 +35,9 @@ public class UI implements Runnable{
 					case "stop listen":
 						cmdStopListen();
 						break;
+					case "send":
+						cmdSend("Hello from server");
+						break;
 					default:
 						System.out.println("Unknown command: "+cmd);
 						break;
@@ -69,12 +72,13 @@ public class UI implements Runnable{
 	}
 	
 	private void cmdStartListen(){
-
 		server.startListening();
 	}
 	private void cmdStopListen(){
-
 		server.stopListening();
+	}
+	private void cmdSend(String message){
+		server.sendMsg(message);
 	}
 
 }

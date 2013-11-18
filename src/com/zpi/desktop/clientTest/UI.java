@@ -3,6 +3,7 @@ package Client;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.InetAddress;
 
 public class UI implements Runnable{
 
@@ -28,6 +29,9 @@ public class UI implements Runnable{
 						break;
 					case "connect":
 						cmdConnect("127.0.0.1", 1000);
+						break;
+					case "disconnect":
+						cmdDisconnect();
 						break;
 					case "send":
 						cmdSend("Hello");

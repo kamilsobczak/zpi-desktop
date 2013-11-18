@@ -28,10 +28,10 @@ public class ServerConnection implements Runnable {
 		try {
 			 
             //send the message to the server
-            out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())), true);
+            out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), "UTF-8")), true);
             
             //receive the message which the server sends back
-            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream(),"UTF-8"));
 
             //in this while the client listens for the messages sent by the server
             while (true) {
@@ -62,7 +62,8 @@ public class ServerConnection implements Runnable {
 	}
 	
 	public void sendMsg(String message){
-		out.write(message);
+		out.write(message+"\n");
+		out.flush();
 	}
 	
 	public void close(){
