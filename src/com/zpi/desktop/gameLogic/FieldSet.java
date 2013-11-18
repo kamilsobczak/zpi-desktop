@@ -7,8 +7,18 @@ public class FieldSet {
 	public ArrayList<Field> collection;
 	
 	public FieldSet(int size){
-		this.collection= new ArrayList<Field>(size);
+		this.collection= new ArrayList<Field>(size);	
+	}
+	
+	private FieldSet(FieldSet fs){
+		this.collection= new  ArrayList<Field>(fs.collection);
 		
+	}
+	
+
+	
+	public FieldSet getFieldSetCopy(){		
+		return new FieldSet(this);	
 	}
 	
 	public void addField(Field f){

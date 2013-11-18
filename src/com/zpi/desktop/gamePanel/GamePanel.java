@@ -1,5 +1,6 @@
 package com.zpi.desktop.gamePanel;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -18,54 +19,86 @@ import com.zpi.desktop.gameLogic.Players;
 import com.zpi.desktop.gameLogic.Shape;
 
 
-
 public class GamePanel extends JPanel implements KeyListener {
 	
 	Players ppl;
 	
     public GamePanel(Players ppl) {
         setPreferredSize(new Dimension(400, 400));
-        this.ppl= ppl;
-        
+        this.ppl= ppl;       
     }
  
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
-        int zz= 0;
+                
         
-        ArrayList<Field> fs = this.ppl.getPlayerByName("adam").getFieldSet().collection;
-        int size = fs.size();
-        int visibleSize = 5;
-        int diff = 0;
-        if(visibleSize > size){
-        	diff= visibleSize-size;
-        	
-        	for(int i=0;i<diff;i++){
-        		zz+=50;
-        	} 
-        	for(int i=0;i<size;i++){
-        		zz+=50;
-        		g.drawImage(fs.get(i).pattern, 0, zz, this);
-        	} 
-        	
-        	
-        	
-    	}else{	
-    		for(int i=0;i<visibleSize;++i){		
-    			zz+=50;
-    			g.drawImage(fs.get((size-visibleSize+i)).pattern, 0, zz, this);
-    		}    		
-    	}
+       
+        
+        int totalPlayers = this.ppl.getPlayersCount();
+        System.out.println("Total Players: "+totalPlayers);
+  
+        ArrayList<Player> playerCollection= this.ppl.getCollection();
+        
+        this.setBackground(new Color(230,230,230));
+         
+        
+        int TOTAL_WIDTH = this.getWidth();
+        int TOTAL_HEIGHT = this.getHeight();
+        
+        int TOTAL_X_POSSITION = 100;
+        int TOTAL_Y_POSSITION = 0;
+        int TOTAL_SHAPE_SIZE = 60;
+        int PADDING_BETWEEN_PLAYERS = 10;
+        int PADDING_BETWEEN_SHAPES = 10;
+        
+        System.out.println("TOTAL_WIDTH: "+TOTAL_WIDTH);
+        System.out.println("GAME PANEL: "+   ((PADDING_BETWEEN_PLAYERS + TOTAL_SHAPE_SIZE)*totalPlayers)      );
+        
+        
+        
+        TOTAL_X_POSSITION=  (TOTAL_WIDTH - ((PADDING_BETWEEN_PLAYERS + TOTAL_SHAPE_SIZE)*totalPlayers) )/2;
+        System.out.println(TOTAL_X_POSSITION);
+        
+        
+        
+        
+        int xAxis= TOTAL_X_POSSITION;
+        int yAxis= TOTAL_Y_POSSITION;
 
-        // PROSTOKAT
-        Rectangle2D rectangle = new Rectangle2D.Double(10, 10, 380, 380);
-        // KOLO
-        Ellipse2D circle = new Ellipse2D.Double(10, 10, 380, 380);
+        for (Player player : playerCollection) {
+        	yAxis+=12;
+        	g.drawString(player.getName(), xAxis, yAxis);
+        	
+        	  int size = player.getFieldSet().getSize();
+              int visibleSize = 5;
+              int diff = 0;
+              if(visibleSize > size){
+              	diff= visibleSize-size;            	
+              	for(int i=0;i<diff;i++){
+              		yAxis+=TOTAL_SHAPE_SIZE+PADDING_BETWEEN_SHAPES;
+              	} 
+              	for(int i=0;i<size;i++){
+              		g.drawImage(player.getFieldSet().collection.get(i).pattern, xAxis, yAxis, this);   
+              		yAxis+=TOTAL_SHAPE_SIZE+PADDING_BETWEEN_SHAPES;              		           		          		  	         		
+              	}            	
+          	}else{	
+          		for(int i=0;i<visibleSize;++i){		         			
+          			g.drawImage(player.getFieldSet().collection.get((size-visibleSize+i)).pattern,xAxis, yAxis, this);	
+          			yAxis+=TOTAL_SHAPE_SIZE+PADDING_BETWEEN_SHAPES;
+          		}    		
+          	}      	
+             g.drawString("Points: "+player.getPoints(), xAxis, yAxis);
+          	xAxis+=TOTAL_SHAPE_SIZE+ PADDING_BETWEEN_PLAYERS;
+          	yAxis=TOTAL_Y_POSSITION;
+          	
+		 }//players loop!
+        
+        
+      
+
  
-        g2d.draw(rectangle);
-        g2d.draw(circle);
     }
 
 	@Override
@@ -85,33 +118,54 @@ public class GamePanel extends JPanel implements KeyListener {
 		// TODO Auto-generated method stub
 		System.out.println("keyTyped");
 		
-		Player p = this.ppl.getPlayerByName("adam");
-		FieldSet fs = p.getFieldSet();
+		Player adam =  this.ppl.getPlayerByName("adam");
+		Player adam2 =  this.ppl.getPlayerByName("adam2");
 		
-		if(fs.isFinished()){
-			System.out.println("is Finished");
-			return;
-		}
+	
+		
+		Shape shape = null;
 		
 		
-		boolean validShape = false;
 		switch(arg0.getKeyChar()){
 		case 'w':
-			validShape= fs.isValidShape(Shape.TRIANGLE);
+			shape= Shape.TRIANGLE;
 			break;
 		case 's':
-			validShape= fs.isValidShape(Shape.CROSS);
+			shape= Shape.CROSS;
 			break;
 		case 'a':
-			validShape= fs.isValidShape(Shape.SQUARE);
+			shape= Shape.SQUARE;
 			break;
 		case 'd':
-			validShape= fs.isValidShape(Shape.CIRCLE);
+			shape= Shape.CIRCLE;
 			break;
 		}
+
+		if(!adam.isFinish() && shape != null){
+			adam.selectShape(shape);	
+		}else{
+			System.out.println("KONIEC!");
+		}
 		
-		if(validShape){
-			fs.popShape();
+		shape = null;
+		switch(arg0.getKeyChar()){
+		case '8':
+			shape= Shape.TRIANGLE;
+			break;
+		case '5':
+			shape= Shape.CROSS;
+			break;
+		case '4':
+			shape= Shape.SQUARE;
+			break;
+		case '6':
+			shape= Shape.CIRCLE;
+			break;
+		}
+		if(!adam2.isFinish() && shape != null){
+			adam2.selectShape(shape);	
+		}else{
+			System.out.println("KONIEC!");
 		}
 		
 		this.repaint();

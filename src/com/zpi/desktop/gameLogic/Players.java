@@ -13,6 +13,10 @@ public class Players {
 	public void addPlayer(Player p) {	
 		collection.add(p);
 	}
+	
+	public ArrayList<Player> getCollection(){
+		return collection;
+	}
 
 	public Player getPlayerByName(String name) {
 
