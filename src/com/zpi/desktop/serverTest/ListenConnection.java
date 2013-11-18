@@ -1,6 +1,10 @@
 package Server;
 
+import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -21,6 +25,7 @@ public class ListenConnection implements Runnable {
 		this.port = port;
 		this.connLimit = connLimit;
 		this.connCount = 0;
+		this.connList = new ArrayList<Socket>();
 	}
 	
 	@Override
@@ -41,10 +46,10 @@ public class ListenConnection implements Runnable {
 					break;
 				}
 				
-//				this.addConn(cs);
+				addConn(cs);
 				Thread clientConnection = new Thread(new ClientConnection(this, cs));
 				clientConnection.start();
-				System.out.println(cs.toString()+" connected");
+//				System.out.println(cs.toString()+" connected");
 			}			
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -70,7 +75,21 @@ public class ListenConnection implements Runnable {
 		connCount--;
 		System.out.println(s.toString()+" disconnected");
 	}
-	
-
-
+	public void sendMsg(String message){
+		for(Socket s : connList)
+		{
+			PrintWriter out;
+			try {
+				out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(s.getOutputStream(), "UTF-8")), true);
+				out.write(message+"\n");
+				out.flush();
+			} catch (UnsupportedEncodingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
 }

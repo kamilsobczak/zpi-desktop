@@ -49,6 +49,6 @@ public class Server {
 			lConn.stop();
 	}
 	public void sendMsg(String message){
-		//lConn.sendMsg(message);
+		lConn.sendMsg(message);
 	}
 }

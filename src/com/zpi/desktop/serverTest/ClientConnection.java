@@ -41,7 +41,7 @@ public class ClientConnection implements Runnable {
                     //call the method messageReceived from MyActivity class
                 	
                 	System.out.println("odebrano: "+msg);
-                	sendMsg("Server - Odebra³em: "+msg);
+//                	sendMsg("Server - Odebra³em: "+msg);
                 }
                 msg = null;
             }
