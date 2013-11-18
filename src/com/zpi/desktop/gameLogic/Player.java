@@ -5,6 +5,15 @@ public class Player {
 	private String name;
 	private int points;
 	private FieldSet fieldSet;
+	private PointsManager pointsManager = null;
+	
+	public PointsManager getPointsManager() {
+		return pointsManager;
+	}
+
+	public void setPointsManager(PointsManager pointsManager) {
+		this.pointsManager = pointsManager;
+	}
 
 	public FieldSet getFieldSet() {
 		return fieldSet;
@@ -39,6 +48,21 @@ public class Player {
 	public void setPoints(int points) {
 		this.points = points;
 	}
+	
+	
+	public void selectShape(Shape shape){
+		if(this.fieldSet.isValidShape(shape)){
+			this.fieldSet.popShape();
+			this.addPoints(this.pointsManager.getValid());
+		}else{
+			this.addPoints(this.pointsManager.getInvalid());
+		}	
+	}
+	
+	public boolean isFinish(){
+		return (this.fieldSet.getSize() == 0);
+	}
+	
 
 	@Override
 	public String toString() {

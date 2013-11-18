@@ -11,6 +11,7 @@ import com.zpi.desktop.gameLogic.FieldSet;
 import com.zpi.desktop.gameLogic.FieldSetFactory;
 import com.zpi.desktop.gameLogic.Player;
 import com.zpi.desktop.gameLogic.Players;
+import com.zpi.desktop.gameLogic.PointsManager;
 import com.zpi.desktop.gamePanel.GamePanel;
 
 public class main {
@@ -40,7 +41,11 @@ public class main {
 				ppl.addPlayer(new Player("adam"));	
 				ppl.addPlayer(new Player("adam2"));	 
 				System.out.println(ppl.toString());
-					
+				 
+				PointsManager pointsManager = new PointsManager();
+				pointsManager.setInvalid(-1);
+				pointsManager.setValid(1);
+				
 				
 				FieldSetFactory factory = new FieldSetFactory(FieldSetFactory.MODE_RANDOM);
 				FieldSet fieldSet= factory.generateFieldSet(13);
@@ -48,8 +53,14 @@ public class main {
 				
 				
 				ppl.getPlayerByName("adam").setFieldSet(fieldSet.getFieldSetCopy());
-			//	ppl.getPlayerByName("adam3").setFieldSet(fieldSet.getFieldSetCopy());
+				ppl.getPlayerByName("adam").setPointsManager(pointsManager);
 				ppl.getPlayerByName("adam2").setFieldSet(fieldSet);
+				ppl.getPlayerByName("adam2").setPointsManager(pointsManager);
+				
+				
+				
+				
+				
 				
 				JFrame gameWindow = new JFrame("ex");
 				gameWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

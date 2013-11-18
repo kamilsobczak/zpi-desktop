@@ -41,7 +41,7 @@ public class GamePanel extends JPanel implements KeyListener {
   
         ArrayList<Player> playerCollection= this.ppl.getCollection();
         
-        this.setBackground(Color.MAGENTA);
+        this.setBackground(new Color(230,230,230));
          
         
         int TOTAL_WIDTH = this.getWidth();
@@ -89,7 +89,7 @@ public class GamePanel extends JPanel implements KeyListener {
           			yAxis+=TOTAL_SHAPE_SIZE+PADDING_BETWEEN_SHAPES;
           		}    		
           	}      	
-             g.drawString(player.getName(), xAxis, yAxis);
+             g.drawString("Points: "+player.getPoints(), xAxis, yAxis);
           	xAxis+=TOTAL_SHAPE_SIZE+ PADDING_BETWEEN_PLAYERS;
           	yAxis=TOTAL_Y_POSSITION;
           	
@@ -118,59 +118,55 @@ public class GamePanel extends JPanel implements KeyListener {
 		// TODO Auto-generated method stub
 		System.out.println("keyTyped");
 		
-		FieldSet adam =  this.ppl.getPlayerByName("adam").getFieldSet();
-		FieldSet adam2 =  this.ppl.getPlayerByName("adam2").getFieldSet();
+		Player adam =  this.ppl.getPlayerByName("adam");
+		Player adam2 =  this.ppl.getPlayerByName("adam2");
 		
-		if(adam.isFinished()){
-		//	System.out.println("is Finished");
-		//	return;
-		}
+	
 		
-		//System.out.println(arg0.getKeyChar());
+		Shape shape = null;
 		
 		
-		boolean validShapeAdam = false;
-		boolean validShapeAdam2 = false;
 		switch(arg0.getKeyChar()){
 		case 'w':
-			validShapeAdam= adam.isValidShape(Shape.TRIANGLE);
+			shape= Shape.TRIANGLE;
 			break;
 		case 's':
-			validShapeAdam= adam.isValidShape(Shape.CROSS);
+			shape= Shape.CROSS;
 			break;
 		case 'a':
-			validShapeAdam= adam.isValidShape(Shape.SQUARE);
+			shape= Shape.SQUARE;
 			break;
 		case 'd':
-			validShapeAdam= adam.isValidShape(Shape.CIRCLE);
+			shape= Shape.CIRCLE;
 			break;
 		}
-		
-		if(validShapeAdam){
-			adam.popShape();
+
+		if(!adam.isFinish() && shape != null){
+			adam.selectShape(shape);	
+		}else{
+			System.out.println("KONIEC!");
 		}
 		
-		
+		shape = null;
 		switch(arg0.getKeyChar()){
 		case '8':
-			validShapeAdam2= adam2.isValidShape(Shape.TRIANGLE);
+			shape= Shape.TRIANGLE;
 			break;
 		case '5':
-			validShapeAdam2= adam2.isValidShape(Shape.CROSS);
+			shape= Shape.CROSS;
 			break;
 		case '4':
-			validShapeAdam2= adam2.isValidShape(Shape.SQUARE);
+			shape= Shape.SQUARE;
 			break;
 		case '6':
-			validShapeAdam2= adam2.isValidShape(Shape.CIRCLE);
+			shape= Shape.CIRCLE;
 			break;
 		}
-		
-		if(validShapeAdam2){
-			adam2.popShape();
+		if(!adam2.isFinish() && shape != null){
+			adam2.selectShape(shape);	
+		}else{
+			System.out.println("KONIEC!");
 		}
-		
-		
 		
 		this.repaint();
 		
