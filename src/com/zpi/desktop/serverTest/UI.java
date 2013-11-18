@@ -1,4 +1,4 @@
-package com.zpi.desktop.serverTest;
+package Server;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -36,7 +36,7 @@ public class UI implements Runnable{
 						cmdStopListen();
 						break;
 					default:
-						System.out.println("Unknown command "+cmd);
+						System.out.println("Unknown command: "+cmd);
 						break;
 				}
 			}

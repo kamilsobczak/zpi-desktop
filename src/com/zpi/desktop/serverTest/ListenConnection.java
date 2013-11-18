@@ -1,4 +1,4 @@
-package com.zpi.desktop.serverTest;
+package Server;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -41,9 +41,10 @@ public class ListenConnection implements Runnable {
 					break;
 				}
 				
-				this.addConn(cs);
+//				this.addConn(cs);
 				Thread clientConnection = new Thread(new ClientConnection(this, cs));
 				clientConnection.start();
+				System.out.println(cs.toString()+" connected");
 			}			
 		} catch (IOException e) {
 			e.printStackTrace();

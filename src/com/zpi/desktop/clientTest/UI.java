@@ -1,4 +1,4 @@
-package com.zpi.desktop.clientTest;
+package Client;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -26,7 +26,15 @@ public class UI implements Runnable{
 					case "quit":
 						cmdQuit();
 						break;
-					default: break;
+					case "connect":
+						cmdConnect("127.0.0.1", 1000);
+						break;
+					case "send":
+						cmdSend("Hello");
+						break;
+					default:
+						System.out.println("Unknown command: "+cmd);
+						break;
 				}
 			}
 		}
@@ -38,6 +46,15 @@ public class UI implements Runnable{
 	private void cmdQuit(){
 		quit = true;
 		client.quit();
+	}
+	private void cmdConnect(String IP, int port){
+		client.connect(IP, port);
+	}
+	private void cmdDisconnect(){
+		client.disconnect();
+	}
+	private void cmdSend(String message){
+		client.sendMsg(message);
 	}
 	
 }
