@@ -30,8 +30,8 @@ public class main {
 				System.out.println(ppl.toString());
 					
 				
-				FieldSetFactory factory = new FieldSetFactory(FieldSetFactory.MODE_RANDOM_NOT_REPEATABLE);
-				FieldSet fieldSet= factory.generateFieldSet(3);
+				FieldSetFactory factory = new FieldSetFactory(FieldSetFactory.MODE_RANDOM);
+				FieldSet fieldSet= factory.generateFieldSet(310);
 				System.out.println(fieldSet.toString());
 				
 				
