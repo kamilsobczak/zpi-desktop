@@ -1,11 +1,11 @@
-package Client;
+package com.zpi.desktop.clientTest;
 
 import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-import Server.ClientConnection;
-import Server.ListenConnection;
+import com.zpi.desktop.serverTest.ClientConnection;
+import com.zpi.desktop.serverTest.ListenConnection;
 
 public class Client {
 	private boolean quit;

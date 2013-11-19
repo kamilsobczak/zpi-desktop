@@ -1,4 +1,4 @@
-package Server;
+package com.zpi.desktop.serverTest;
 
 import java.io.BufferedWriter;
 import java.io.IOException;

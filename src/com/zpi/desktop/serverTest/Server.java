@@ -1,4 +1,4 @@
-package Server;
+package com.zpi.desktop.serverTest;;
 
 public class Server {
 	private boolean quit;

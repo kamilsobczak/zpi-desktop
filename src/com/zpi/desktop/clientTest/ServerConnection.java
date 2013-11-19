@@ -1,4 +1,4 @@
-package Client;
+package com.zpi.desktop.clientTest;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
