@@ -40,7 +40,7 @@ public class ClientConnection implements Runnable {
 	@Override
 	public void run() {
 		try {
-			System.out.println("!!jeste w runie!!!!!!!!!!!!!!!!!!");
+			System.out.println("!!jeste w runie!!!!!!!!!!!3!!!!!!!");
         
             //send the message to the server
             out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), "UTF-8")), true);
