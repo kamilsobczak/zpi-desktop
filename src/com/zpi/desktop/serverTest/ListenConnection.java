@@ -1,5 +1,6 @@
 package com.zpi.desktop.serverTest;
 
+import java.awt.event.KeyListener;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -8,6 +9,16 @@ import java.io.UnsupportedEncodingException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+
+import com.zpi.desktop.gameLogic.FieldSet;
+import com.zpi.desktop.gameLogic.FieldSetFactory;
+import com.zpi.desktop.gameLogic.Player;
+import com.zpi.desktop.gameLogic.Players;
+import com.zpi.desktop.gameLogic.PointsManager;
+import com.zpi.desktop.gamePanel.GamePanel;
 
 public class ListenConnection implements Runnable {
 
@@ -37,20 +48,66 @@ public class ListenConnection implements Runnable {
 			ss = new ServerSocket(this.port);
 			
 			System.out.println("listening started");
-			
+			JFrame gameWindow = new JFrame("Serwer");
+			Players ppl = new Players();
+			int ileGraczy = 0;
+			Player player = null;
+			JFrame okno = new JFrame("oczekiwanie");
+			okno.setBounds(10, 10, 600, 400);
+			okno.show();
 			while(running && (connCount < connLimit))	{
 				try{				
 					cs = ss.accept();
+					System.out.println("ACCEPT !!!!!!!!!!!!!!!!!!!!");
+					player = new Player(cs.getInetAddress().toString());
+					ppl.addPlayer(player);
+					System.out.println(player);
+					ileGraczy++;
+
 				} catch(Exception e){
 					System.out.println("ServerSocket.accept() interrupted");
 					break;
-				}
-				
+				}		
 				addConn(cs);
-				Thread clientConnection = new Thread(new ClientConnection(this, cs));
-				clientConnection.start();
-//				System.out.println(cs.toString()+" connected");
+				Thread clientConnection = new Thread(new ClientConnection(this, cs, player, gameWindow));
+				clientConnection.start();		
+//				System.out.println(cs.toString()+" connected");		
+				if(ileGraczy == 2){
+					okno.hide();
+					break;
+				}
 			}			
+
+			
+			 
+			PointsManager pointsManager = new PointsManager();
+			pointsManager.setInvalid(-1);
+			pointsManager.setValid(1);
+			
+			
+			FieldSetFactory factory = new FieldSetFactory(FieldSetFactory.MODE_RANDOM);
+			FieldSet fieldSet= factory.generateFieldSet(13);
+			System.out.println(fieldSet.toString());
+			
+			
+			//ppl.getPlayerByName("adam").setFieldSet(fieldSet.getFieldSetCopy());
+			//ppl.getPlayerByName("adam").setPointsManager(pointsManager);
+			
+			
+			for (Player player1 : ppl.getCollection()) {
+				player1.setFieldSet(fieldSet.getFieldSetCopy());
+				player1.setPointsManager(pointsManager);
+			}
+			
+			
+			gameWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			gameWindow.setBounds(10, 10, 500, 500);
+			JPanel pp = new GamePanel(ppl); 
+			gameWindow.add(pp);
+			gameWindow.addKeyListener((KeyListener)pp);
+			gameWindow.setVisible(true);
+
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
