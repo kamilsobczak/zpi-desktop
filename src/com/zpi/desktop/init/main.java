@@ -1,93 +1,115 @@
 package com.zpi.desktop.init;
 
-import java.awt.EventQueue;
-import java.awt.event.KeyListener;
-import java.util.ArrayList;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
+import javax.swing.ButtonGroup;
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JSlider;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
-import com.zpi.desktop.gameLogic.FieldSet;
-import com.zpi.desktop.gameLogic.FieldSetFactory;
-import com.zpi.desktop.gameLogic.Player;
-import com.zpi.desktop.gameLogic.Players;
-import com.zpi.desktop.gameLogic.PointsManager;
-import com.zpi.desktop.gamePanel.GamePanel;
-import com.zpi.desktop.serverTest.*;
+import com.zpi.desktop.gameLogic.ActionXXX;
+import com.zpi.desktop.gameLogic.Config;
+import com.zpi.desktop.serverTest.Server;
 
 public class main {
 
-	/**
-	 * @param args
-	 */
+	public static JFrame config;
+
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		System.out.println("INIT");
 
-		
-		ArrayList<String> list1 = new ArrayList<String>();
-		list1.add("jeden");
-		list1.add("dwa");
-		
-		ArrayList<String> list2 = new ArrayList<String>(list1);
-		list2.add("trzy");
-		
-		EventQueue.invokeLater(new Runnable() {
+		config = new JFrame("Konfiguracja");
+		config.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		config.setLayout(new BorderLayout());
+		config.add(new JLabel("Ustawienia konfiguracyje"));
+		config.setBounds(10, 10, 300, 200);
+
+		JPanel zza = new JPanel(new GridLayout(2, 2));
+
+		JSlider framesPerSecond = new JSlider(JSlider.HORIZONTAL, 0, 5, 2);
+		framesPerSecond.addChangeListener(new ChangeListener() {
+
 			@Override
-			public void run() {
-			
-//				Players ppl = new Players();
-//				
-//				//ppl.addPlayer(new Player("gracz2"));	
-//				ppl.addPlayer(new Player("adam"));	
-//				ppl.addPlayer(new Player("adam2"));	 
-//				System.out.println(ppl.toString());
-//				 
-//				PointsManager pointsManager = new PointsManager();
-//				pointsManager.setInvalid(-1);
-//				pointsManager.setValid(1);
-//				
-//				
-//				FieldSetFactory factory = new FieldSetFactory(FieldSetFactory.MODE_RANDOM);
-//				FieldSet fieldSet= factory.generateFieldSet(13);
-//				System.out.println(fieldSet.toString());
-//				
-//				
-//				ppl.getPlayerByName("adam").setFieldSet(fieldSet.getFieldSetCopy());
-//				ppl.getPlayerByName("adam").setPointsManager(pointsManager);
-//				ppl.getPlayerByName("adam2").setFieldSet(fieldSet);
-//				ppl.getPlayerByName("adam2").setPointsManager(pointsManager);
-//				
-//				JFrame gameWindow = new JFrame("ex");
-//				gameWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//				gameWindow.setBounds(10, 10, 500, 500);
-//				JPanel pp = new GamePanel(ppl); 
-//				gameWindow.add(pp);
-//				gameWindow.addKeyListener((KeyListener)pp);
-//				gameWindow.setVisible(true);
-				
+			public void stateChanged(ChangeEvent e) {
+				// TODO Auto-generated method stub
+				JSlider source = (JSlider) e.getSource();
+				int fps = (int) source.getValue();
+				Config.ppl = fps;
+
+			}
+		});
+
+		// Create the radio buttons.
+		JRadioButton easy = new JRadioButton("£atwy");
+		easy.setActionCommand("£atwy");
+		easy.setSelected(true);
+
+		JRadioButton hard = new JRadioButton("Trudny");
+		hard.setActionCommand("Trudny");
+		hard.setSelected(false);
+
+		JRadioButton middle = new JRadioButton("Œredni");
+		middle.setActionCommand("Œredni");
+		middle.setSelected(false);
+
+		// Group the radio buttons.
+		ButtonGroup group = new ButtonGroup();
+		group.add(easy);
+		group.add(middle);
+		group.add(hard);
+
+		easy.addActionListener(new ActionXXX(1));
+		middle.addActionListener(new ActionXXX(2));
+		hard.addActionListener(new ActionXXX(3));
+
+		JPanel jPanel = new JPanel(new GridLayout(3, 1));
+		group.add(easy);
+		group.add(middle);
+		group.add(hard);
+
+		jPanel.add(easy);
+		jPanel.add(middle);
+		jPanel.add(hard);
+
+		zza.add(new JLabel("Liczba graczy:"));
+		zza.add(framesPerSecond);
+		zza.add(new JLabel("opcja1"));
+		zza.add(jPanel);
+
+		framesPerSecond.setMajorTickSpacing(5);
+		framesPerSecond.setMinorTickSpacing(1);
+		framesPerSecond.setPaintTicks(true);
+		framesPerSecond.setPaintLabels(true);
+
+		config.add(new JLabel("Wybierz:"), BorderLayout.PAGE_START);
+		config.add(zza, BorderLayout.CENTER);
+
+		JButton zz = new JButton("GRAJ!");
+		zz.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
 				Server serv = new Server();
 				serv.setPort(6666);
 				serv.startListening();
-				
-				
-			
-				  
-				
-				
-				
-				
-				
+				config.setVisible(false);
 			}
 		});
-		
-		
-		
-		
-		
-		
-		
-		
+		config.add(zz, BorderLayout.PAGE_END);
+
+		config.setVisible(true);
+
+	
 	}
 
 }

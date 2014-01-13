@@ -19,7 +19,7 @@ public class FieldSetFactory {
 	}
 
 	private int getRandomInt(){	 
-		return this.generator.nextInt(4);
+		return this.generator.nextInt(Config.poziom);
 	}
 	
 	
