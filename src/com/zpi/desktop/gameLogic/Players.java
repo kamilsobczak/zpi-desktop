@@ -37,6 +37,18 @@ public class Players {
 		}
 	}
 	
+	public boolean isEndGame(){
+		for (Player player : this.collection) {
+			if (!player.isFinish()) {
+				return false;
+			}
+		}
+		return  true;
+	}
+	
+ 
+	
+	
 	public int getPlayersCount() {
 		return this.collection.size();		
 	}

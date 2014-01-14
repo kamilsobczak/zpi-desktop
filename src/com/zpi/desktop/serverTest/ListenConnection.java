@@ -1,5 +1,6 @@
 package com.zpi.desktop.serverTest;
 
+import java.awt.BorderLayout;
 import java.awt.event.KeyListener;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -11,19 +12,21 @@ import java.net.Socket;
 import java.util.ArrayList;
 
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import com.zpi.desktop.gameLogic.Config;
 import com.zpi.desktop.gameLogic.FieldSet;
 import com.zpi.desktop.gameLogic.FieldSetFactory;
 import com.zpi.desktop.gameLogic.Player;
 import com.zpi.desktop.gameLogic.Players;
-import com.zpi.desktop.gameLogic.PointsManager;
+import com.zpi.desktop.gamePanel.GameFrame;
 import com.zpi.desktop.gamePanel.GamePanel;
 
 public class ListenConnection implements Runnable {
 
 	private boolean running;
-	
+	private static final int  CLIENT_COUNT_CAP = 1;
 	private int port;
 	private int connLimit;
 	private int connCount;
@@ -41,26 +44,26 @@ public class ListenConnection implements Runnable {
 	
 	@Override
 	public void run() {
-		// TODO Auto-generated method stub
 		running = true;
 		
 		try {
 			ss = new ServerSocket(this.port);
-			
+		
 			System.out.println("listening started");
-			JFrame gameWindow = new JFrame("Serwer");
 			Players ppl = new Players();
+			GameFrame gameWindow = new GameFrame(ppl);
+			
+			
+			
 			int ileGraczy = 0;
-			Player player = null;
-			JFrame okno = new JFrame("oczekiwanie");
-			okno.setBounds(10, 10, 600, 400);
-			okno.show();
+			Player player = null; 
 			while(running && (connCount < connLimit))	{
 				try{				
 					cs = ss.accept();
 					System.out.println("ACCEPT !!!!!!!!!!!!!!!!!!!!");
 					player = new Player(cs.getInetAddress().toString());
 					ppl.addPlayer(player);
+					player.setId(ppl.getPlayersCount());
 					System.out.println(player);
 					ileGraczy++;
 
@@ -70,44 +73,25 @@ public class ListenConnection implements Runnable {
 				}		
 				addConn(cs);
 				Thread clientConnection = new Thread(new ClientConnection(this, cs, player, gameWindow));
-				clientConnection.start();		
-//				System.out.println(cs.toString()+" connected");		
-				if(ileGraczy == 1){
-					okno.hide();
+				clientConnection.start();			
+				if(ileGraczy == Config.ppl){
+					gameWindow.initializeGame();
 					break;
 				}
 			}			
 
-			
-			 
-			PointsManager pointsManager = new PointsManager();
-			pointsManager.setInvalid(-1);
-			pointsManager.setValid(1);
-			
-			
 			FieldSetFactory factory = new FieldSetFactory(FieldSetFactory.MODE_RANDOM);
-			FieldSet fieldSet= factory.generateFieldSet(40);
+			FieldSet fieldSet= factory.generateFieldSet(Config.klocki);
 			System.out.println(fieldSet.toString());
 			
-			
-			//ppl.getPlayerByName("adam").setFieldSet(fieldSet.getFieldSetCopy());
-			//ppl.getPlayerByName("adam").setPointsManager(pointsManager);
-			
-			
+					
 			for (Player player1 : ppl.getCollection()) {
-				player1.setFieldSet(fieldSet.getFieldSetCopy());
-				player1.setPointsManager(pointsManager);
+				player1.setFieldSet(fieldSet.getFieldSetCopy());			
 			}
 			
-			
-			gameWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			gameWindow.setBounds(10, 10, 500, 500);
-			JPanel pp = new GamePanel(ppl); 
-			gameWindow.add(pp);
-			gameWindow.addKeyListener((KeyListener)pp);
-			gameWindow.setVisible(true);
+			gameWindow.repaint();			
+			gameWindow.itsAFinnalCountdown();
 
-			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -140,11 +124,7 @@ public class ListenConnection implements Runnable {
 				out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(s.getOutputStream(), "UTF-8")), true);
 				out.write(message+"\n");
 				out.flush();
-			} catch (UnsupportedEncodingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}

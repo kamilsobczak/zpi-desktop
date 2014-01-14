@@ -3,16 +3,61 @@ package com.zpi.desktop.gameLogic;
 public class Player {
 
 	private String name;
-	private int points;
 	private FieldSet fieldSet;
-	private PointsManager pointsManager = null;
-	
-	public PointsManager getPointsManager() {
-		return pointsManager;
+	private PlayerStatistics statistics;
+	private int id;
+	public boolean dodano = false;
+
+	public int getId() {
+		return id;
 	}
 
-	public void setPointsManager(PointsManager pointsManager) {
-		this.pointsManager = pointsManager;
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public class PlayerStatistics {
+
+		private static final int RAGE_COUNT = 6;
+		
+		private static final int RAGE_POINTS = 3;
+		private static final int SUCCESS_POINTS = 1;
+		private static final int FAIL_POINTS = -1;
+		private int points = 0;
+		private int rageCount = 0;
+
+		public PlayerStatistics() {
+
+		}
+		
+		private boolean onRage(){
+			return (rageCount == RAGE_COUNT);
+		}
+		public void restart(){
+			points = 0;
+			 rageCount = 0;
+		}
+
+		public void setSuccessedHit() {
+			this.points += SUCCESS_POINTS;
+			this.rageCount++;
+			
+			if(this.onRage()){
+				this.points += RAGE_POINTS;
+				this.rageCount=0;
+			}
+			
+		}
+
+		public void setFailedHit() {
+			this.points += FAIL_POINTS;
+			this.rageCount=0;
+		}
+
+		public int getPoints() {
+			return this.points;
+		}
+
 	}
 
 	public FieldSet getFieldSet() {
@@ -24,12 +69,22 @@ public class Player {
 	}
 
 	public Player(String name) {
-		this.points = 0;
 		this.name = name;
+		this.statistics = new PlayerStatistics();
+
 	}
 
-	public void addPoints(int value) {
-		this.points += value;
+	public void addPoints() {
+		this.statistics.setSuccessedHit();
+	}
+
+	public void addPoints(int points) {
+		this.statistics.points +=points;		
+	}
+	
+	
+	public void removePoints() {
+		this.statistics.setFailedHit();
 	}
 
 	// ----------------------------------------------------------------
@@ -42,31 +97,33 @@ public class Player {
 	}
 
 	public int getPoints() {
-		return points;
+		return this.statistics.getPoints();
 	}
 
-	public void setPoints(int points) {
-		this.points = points;
-	}
-	
-	
-	public void selectShape(Shape shape){
-		if(this.fieldSet.isValidShape(shape)){
+	public void selectShape(Shape shape) {
+		if (this.fieldSet.isValidShape(shape)) {
 			this.fieldSet.popShape();
-			this.addPoints(this.pointsManager.getValid());
-		}else{
-			this.addPoints(this.pointsManager.getInvalid());
-		}	
+
+			this.addPoints();
+		} else {
+			this.removePoints();
+		}
 	}
-	
-	public boolean isFinish(){
+
+	public boolean isFinish() {
 		return (this.fieldSet.getSize() == 0);
 	}
-	
 
 	@Override
 	public String toString() {
-		return "Player [name=" + name + ", points=" + points + "]";
+		return "Player [name=" + name + ", points=" + this.statistics.getPoints() + "]";
 	}
+
+	public void restartStatistics() {
+		// TODO Auto-generated method stub
+		this.statistics.restart();
+	}
+
+
 
 }
