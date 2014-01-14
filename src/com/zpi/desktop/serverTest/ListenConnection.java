@@ -72,7 +72,7 @@ public class ListenConnection implements Runnable {
 				Thread clientConnection = new Thread(new ClientConnection(this, cs, player, gameWindow));
 				clientConnection.start();		
 //				System.out.println(cs.toString()+" connected");		
-				if(ileGraczy == 2){
+				if(ileGraczy == 1){
 					okno.hide();
 					break;
 				}
@@ -86,7 +86,7 @@ public class ListenConnection implements Runnable {
 			
 			
 			FieldSetFactory factory = new FieldSetFactory(FieldSetFactory.MODE_RANDOM);
-			FieldSet fieldSet= factory.generateFieldSet(13);
+			FieldSet fieldSet= factory.generateFieldSet(40);
 			System.out.println(fieldSet.toString());
 			
 			

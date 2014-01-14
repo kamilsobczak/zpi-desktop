@@ -74,10 +74,10 @@ public class ClientConnection implements Runnable {
                 		break;
 					case "trojkat":
 						shape = Shape.TRIANGLE;           		
-						    break;
+					    break;
 					case "krzyzyk":
 						shape = Shape.CROSS;
-							break;
+						break;
                 	}
         	
                 	if(shape != null){
